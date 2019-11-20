@@ -21,8 +21,10 @@
 ## Development
 
 ### Requirements
+
 * [Docker](https://www.docker.com/products/docker-desktop)
 * [Dory](https://github.com/FreedomBen/dory)
+* `.token` file in the root of the project, containing a valid token for use with MaterialList, OpenPlatform and FollowSearches. ___(optional, you might not need or want live data.)___
 
 ### Installation
 
@@ -114,7 +116,7 @@ export function withoutData() {
   yarn dev
 ```
 
-6. Voila! You browser should have opened and a StoryBook environment is ready for you to tinker around.
+6. Voila! You browser should have opened and a storybook environment is ready for you to tinker around.
 
 ### Style your application
 
