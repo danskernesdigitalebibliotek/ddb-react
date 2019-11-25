@@ -1,5 +1,33 @@
 .ddb-btn {
   @extend .ddb-reset;
-  -webkit-appearance: button;
-  color: blue;
+
+  background: color("grey");
+  border-radius: $border-radius;
+  color: color("charcoal", "opacity-dark");
+  cursor: pointer;
+  font-family: inherit;
+  font-size: space(5);
+  padding: space(5) space(6);
+  transition: background duration("fast", 2) easing();
+
+  &:hover {
+    color: color("charcoal");
+  }
+
+  &--secondary {
+    &:hover {
+      background: color("secondary");
+      color: color("secondary", text);
+    }
+  }
+
+  &--charcoal {
+    background: color("charcoal");
+    color: color("white");
+
+    &:hover {
+      background: color("grey", "dark");
+      color: color("white");
+    }
+  }
 }
