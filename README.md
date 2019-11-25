@@ -6,6 +6,7 @@
 
 - [Development](#development)
   - [Requirements](#requirements)
+    - [Retrieving an access token](#retrieving-an-access-token)
   - [Installation](#installation)
   - [Create a new application](#create-a-new-application)
   - [Style your application](#style-your-application)
@@ -28,6 +29,13 @@
 
 #### Retrieving an access token
 
+We have a make target for retrieving an access token.
+You still need the valid client id and client secret as described below.
+
+```bash
+make token
+```
+
 The [OAuth access token must be retrieved from Adgangsplatformen](https://github.com/DBCDK/hejmdal/blob/master/docs/oauth2.md), a single sign-on solution for public libraries in Denmark. 
 
 Usage of Adgangsplatformen requires a valid client id and secret which must be
@@ -36,7 +44,7 @@ for running Adgangsplatfomen.
 
 Example for retrieving an access token using password grant:
 
-```
+```bash
 curl -X POST https://login.bib.dk/oauth/token -d 'grant_type=password&password=[patron-password]&username=[patron-username]&agency=[patron-library-agency-id]&client_id=[client-id]&client_secret=[client-secret]'
 ```
 
