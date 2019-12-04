@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import urlPropType from "url-prop-type";
 import Skeleton from "../../components/atoms/skeleton/skeleton";
 import Button from "../../components/atoms/button/button";
 import UnorderedList from "../../components/atoms/list/list";
@@ -10,9 +11,9 @@ function getList(length) {
   return Array.from(new Array(length));
 }
 
-function SkeletonElement() {
+function SkeletonElement(_, index) {
   return (
-    <li className="ddb-list__item">
+    <li key={index} className="ddb-list__item">
       <section className="ddb-list__inner">
         <article className="ddb-list__content">
           <figure className="ddb-list__cover">
@@ -38,8 +39,14 @@ function Checklist({
   onRemove,
   materialUrl,
   authorUrl,
-  removeButtonText
+  removeButtonText,
+  emptyListText,
+  errorText
 }) {
+  if (loading === "failed") {
+    return <Alert type="assertive" message={errorText} />;
+  }
+
   if (loading === "active") {
     return (
       <UnorderedList className="ddb-skeleton-wrapper">
@@ -49,7 +56,7 @@ function Checklist({
   }
 
   if (loading === "finished" && items.length === 0) {
-    return <Alert type="polite" message="No items on the list!" />;
+    return <Alert type="polite" message={emptyListText} />;
   }
 
   return (
@@ -66,7 +73,7 @@ function Checklist({
                     value: item.pid
                   })}
                 >
-                  <img src={item.coverUrlThumbnail} alt={item.title} />
+                  <img src={item.coverUrl} alt={item.title} />
                 </a>
               </figure>
               <div className="ddb-list__data">
@@ -81,9 +88,9 @@ function Checklist({
                   <h2>{item.title}</h2>
                 </a>
                 <p>
-                  {item.creator.map((creator, index) => {
+                  {item.creators.map((creator, index) => {
                     return (
-                      <span>
+                      <span key={creator}>
                         <a
                           href={createPath({
                             url: authorUrl,
@@ -118,24 +125,27 @@ function Checklist({
 
 Checklist.defaultProps = {
   items: [],
-  loading: "inactive",
-  removeButtonText: "Fjern fra listen"
+  loading: "inactive"
 };
 
 Checklist.propTypes = {
-  loading: PropTypes.oneOf(["inactive", "active", "finished"]),
+  loading: PropTypes.oneOf(["inactive", "active", "finished", "failed"]),
   items: PropTypes.arrayOf(
     PropTypes.shape({
-      creator: PropTypes.string,
+      pid: PropTypes.string,
+      creators: PropTypes.arrayOf(PropTypes.string),
       title: PropTypes.string,
       type: PropTypes.string,
-      year: PropTypes.number
+      year: PropTypes.string,
+      coverUrl: urlPropType
     })
   ),
   onRemove: PropTypes.func.isRequired,
   materialUrl: PropTypes.string.isRequired,
   authorUrl: PropTypes.string.isRequired,
-  removeButtonText: PropTypes.string
+  removeButtonText: PropTypes.string.isRequired,
+  emptyListText: PropTypes.string.isRequired,
+  errorText: PropTypes.string.isRequired
 };
 
 export default Checklist;

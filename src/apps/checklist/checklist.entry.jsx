@@ -18,10 +18,12 @@ const client = new MaterialList();
 function formatResult(item) {
   return {
     ...item,
-    creator: item.dcCreator ? item.dcCreator : item.creator,
-    title: item.dcTitleFull,
-    type: item.typeBibDKType,
-    year: item.date
+    pid: item.pid?.[0],
+    creators: item.dcCreator ? item.dcCreator : item.creator,
+    title: item.dcTitleFull?.[0],
+    type: item.typeBibDKType?.[0],
+    year: item.date?.[0],
+    coverUrl: item.coverUrlThumbnail?.[0]
   };
 }
 
@@ -30,7 +32,13 @@ function formatResult(item) {
  * @memberof ChecklistEntry
  * @returns {ReactNode}
  */
-function ChecklistEntry({ materialUrl, authorUrl, removeButtonText }) {
+function ChecklistEntry({
+  materialUrl,
+  authorUrl,
+  removeButtonText,
+  emptyListText,
+  errorText
+}) {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState("inactive");
 
@@ -57,7 +65,11 @@ function ChecklistEntry({ materialUrl, authorUrl, removeButtonText }) {
         setList(result.map(formatResult));
       })
       .catch(function onError() {
-        setList([]);
+        setLoading("failed");
+        setTimeout(() => {
+          setLoading("inactive");
+          setList([]);
+        }, 2000);
       })
       .finally(function onEnd() {
         setLoading("finished");
@@ -78,7 +90,9 @@ function ChecklistEntry({ materialUrl, authorUrl, removeButtonText }) {
       })
     );
     client.deleteListMaterial({ materialId }).catch(function onError() {
+      setLoading("failed");
       setTimeout(function onRestore() {
+        setLoading("inactive");
         setList(fallbackList);
       }, 2000);
     });
@@ -91,6 +105,8 @@ function ChecklistEntry({ materialUrl, authorUrl, removeButtonText }) {
       materialUrl={materialUrl}
       authorUrl={authorUrl}
       removeButtonText={removeButtonText}
+      emptyListText={emptyListText}
+      errorText={errorText}
     />
   );
 }
@@ -98,11 +114,15 @@ function ChecklistEntry({ materialUrl, authorUrl, removeButtonText }) {
 ChecklistEntry.propTypes = {
   materialUrl: PropTypes.string.isRequired,
   authorUrl: PropTypes.string.isRequired,
-  removeButtonText: PropTypes.string
+  removeButtonText: PropTypes.string,
+  emptyListText: PropTypes.string,
+  errorText: PropTypes.string
 };
 
 ChecklistEntry.defaultProps = {
-  removeButtonText: "Fjern fra listen"
+  removeButtonText: "Fjern fra listen",
+  emptyListText: "Listen er tom",
+  errorText: "Noget gik galt"
 };
 
 export default ChecklistEntry;
