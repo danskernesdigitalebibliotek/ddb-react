@@ -2058,6 +2058,11 @@
     "@reach/visually-hidden" "^0.6.1"
     prop-types "^15.7.2"
 
+"@reach/auto-id@^0.6.1":
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@reach/auto-id/-/auto-id-0.6.1.tgz#af30c153787a335cfb258289537d5ea355688821"
+  integrity sha512-t3uhdZwalO3Mph+CUdFIvMcYsMtRZoBHE5rw/+3UvQxV+AeQGNqmtlOix9mq3rOpxi0KEaf1q4CjWx4myFXkRQ==
+
 "@reach/component-component@^0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@reach/component-component/-/component-component-0.5.0.tgz#db2855a03795566ad301167a33822c7b886cd0fe"
@@ -8862,6 +8867,11 @@ ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
+mutationobserver-shim@^0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/mutationobserver-shim/-/mutationobserver-shim-0.3.3.tgz#65869630bc89d7bf8c9cd9cb82188cd955aacd2b"
+  integrity sha512-gciOLNN8Vsf7YzcqRjKzlAJ6y7e+B86u7i3KXes0xfxx/nfLmozlW1Vn+Sc9x3tPIePFgc1AeIFhtRgkqTjzDQ==
+
 mute-stream@0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
@@ -10606,6 +10616,11 @@ react-helmet-async@^1.0.2:
     prop-types "^15.7.2"
     react-fast-compare "^2.0.4"
     shallowequal "^1.1.0"
+
+react-hook-form@^3.28.13:
+  version "3.28.13"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-3.28.13.tgz#04d6cd012bf4b759e5d8c28f70b6d9797a43cc32"
+  integrity sha512-9FZ1j6dsEcd2QgT5rXGVvbwm0y4tQCUVuEsxPpSU58d9mOrkSO8EXDk0bQCh2y2i9qaDkkxgPQh6KX24fqmJMQ==
 
 react-hotkeys@2.0.0-pre4:
   version "2.0.0-pre4"

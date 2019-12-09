@@ -1,6 +1,7 @@
 import React from "react";
 import { withKnobs, text } from "@storybook/addon-knobs";
 import AddToSearchlist from "./add-to-searchlist.entry";
+import "./add-to-searchlist.scss";
 
 export default {
   title: "Apps|Add to Searchlist",
@@ -10,11 +11,19 @@ export default {
 export function Entry() {
   return (
     <AddToSearchlist
-      text={text("Button text", "Add search")}
-      label={text("Field title", "Search title")}
-      defaultTitle={text("Default title", "Harry Potter")}
-      searchQuery={text("Search query", "harry potter")}
-      addButtonLabel={text("Add button label", "Add")}
+      searchQuery={text("Search query", "star wars")}
+      buttonText={text("Button text", "Tilføj til mine søgninger")}
+      labelText={text("Label text", "Søgetitel")}
+      defaultTitle={text("Default title", "")}
+      errorText={text("Error text", "Det gik galt")}
+      successText={text("Success text", "Tilføjet til dine gemte søgninger.")}
+      successLink={text("Success link", "/?path=/story/apps-searchlist--entry")}
+      successLinkText={text("Success link text", "Se dine gemte søgnigner.")}
+      addButtonText={text("Add button text", "Gem")}
+      helpText={text(
+        "Help text",
+        "Gem en søgning her og giv den en titel så du nemt kan kende forskel på alle dine mange gemte søgninger."
+      )}
     />
   );
 }
