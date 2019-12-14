@@ -69,28 +69,34 @@ function Checklist({
         <li key={item.pid} className="ddb-list-item">
           <section className="ddb-list-item__inner">
             <article className="ddb-list-item__content">
-              <figure className="ddb-list-item__cover">
-                <a
-                  href={createPath({
-                    url: materialUrl,
-                    property: ":pid",
-                    value: item.pid
-                  })}
-                >
-                  <img src={item.coverUrl} alt={item.title} />
-                </a>
-              </figure>
+              {item.coverUrl && (
+                <figure className="ddb-list-item__cover">
+                  <a
+                    href={createPath({
+                      url: materialUrl,
+                      property: ":pid",
+                      value: item.pid
+                    })}
+                  >
+                    <img src={item.coverUrl} alt={item.title} />
+                  </a>
+                </figure>
+              )}
               <div className="ddb-list-item__data">
-                <span className="ddb-list-item__type">{item.type}</span>
-                <a
-                  href={createPath({
-                    url: materialUrl,
-                    property: ":pid",
-                    value: item.pid
-                  })}
-                >
-                  <h2 className="ddb-list-item__title">{item.title}</h2>
-                </a>
+                {item.type && (
+                  <span className="ddb-list-item__type">{item.type}</span>
+                )}
+                {item.title && (
+                  <a
+                    href={createPath({
+                      url: materialUrl,
+                      property: ":pid",
+                      value: item.pid
+                    })}
+                  >
+                    <h2 className="ddb-list-item__title">{item.title}</h2>
+                  </a>
+                )}
                 <p>
                   {item.creators.map((creator, index) => {
                     return (
@@ -109,7 +115,9 @@ function Checklist({
                       </span>
                     );
                   })}
-                  <span className="ddb-list-item__year">{item.year}</span>
+                  {item.year && (
+                    <span className="ddb-list-item__year">{item.year}</span>
+                  )}
                 </p>
               </div>
             </article>
