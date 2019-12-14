@@ -25,8 +25,12 @@ function SkeletonElement(_, index) {
             <Skeleton width="95px" />
           </div>
         </article>
-        <aside className="ddb-list-item__buttons ddb-list-item__buttons--remove">
-          <Skeleton width="151px" height="50px" className="ddb-btn" />
+        <aside className="ddb-list-item__buttons">
+          <Skeleton
+            width="151px"
+            height="50px"
+            className="ddb-btn ddb-list-item__button--remove"
+          />
         </aside>
       </section>
     </li>
@@ -108,9 +112,9 @@ function Checklist({
                 </p>
               </div>
             </article>
-            <aside className="ddb-list-item__buttons ddb-list-item__buttons--remove">
+            <aside className="ddb-list-item__buttons">
               <Button
-                className="ddb-btn--charcoal"
+                className="ddb-btn--charcoal ddb-list-item__button--remove"
                 onClick={() => onRemove(item.pid)}
               >
                 {removeButtonText}
