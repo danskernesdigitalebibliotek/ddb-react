@@ -51,6 +51,12 @@
     display: flex;
     flex-direction: column;
   }
+  &__year::before {
+    content: "(";
+  }
+  &__year::after {
+    content: ")";
+  }
   &__inner {
     display: flex;
     flex-direction: column;

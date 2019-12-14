@@ -81,7 +81,7 @@ function Checklist({
                 </a>
               </figure>
               <div className="ddb-list-item__data">
-                {item.type}
+                <span className="ddb-list-item__type">{item.type}</span>
                 <a
                   href={createPath({
                     url: materialUrl,
@@ -89,13 +89,14 @@ function Checklist({
                     value: item.pid
                   })}
                 >
-                  <h2>{item.title}</h2>
+                  <h2 className="ddb-list-item__title">{item.title}</h2>
                 </a>
                 <p>
                   {item.creators.map((creator, index) => {
                     return (
                       <span key={creator}>
                         <a
+                          className="ddb-list-item__creator"
                           href={createPath({
                             url: authorUrl,
                             property: ":author",
@@ -108,7 +109,7 @@ function Checklist({
                       </span>
                     );
                   })}
-                  ({item.year})
+                  <span className="ddb-list-item__year">{item.year}</span>
                 </p>
               </div>
             </article>
