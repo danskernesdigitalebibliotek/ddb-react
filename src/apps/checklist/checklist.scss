@@ -1,4 +1,27 @@
-.ddb-list {
+.ddb-list-item {
+  a {
+    color: color("primary");
+    text-decoration: none;
+    h2 {
+      color: color("charcoal");
+    }
+    &:hover {
+      color: color("charcoal");
+    }
+  }
+  background: color("grey");
+  list-style: none;
+  padding: layout(1);
+  @include sm {
+    padding: layout(2);
+  }
+  @include md {
+    padding: layout(3);
+  }
+  &:nth-child(even) {
+    background: color("white");
+  }
+
   &__cover {
     display: flex;
     margin: 0;
@@ -24,30 +47,6 @@
       margin: space(3) 0;
     }
   }
-  &__item {
-    a {
-      color: color("primary");
-      text-decoration: none;
-      h2 {
-        color: color("charcoal");
-      }
-      &:hover {
-        color: color("charcoal");
-      }
-    }
-    background: color("grey");
-    list-style: none;
-    padding: layout(1);
-    @include sm {
-      padding: layout(2);
-    }
-    @include md {
-      padding: layout(3);
-    }
-    &:nth-child(even) {
-      background: color("white");
-    }
-  }
   &__data {
     display: flex;
     flex-direction: column;
@@ -60,7 +59,7 @@
       flex-direction: row;
     }
   }
-  &__button {
+  &__buttons {
     display: flex;
     justify-content: flex-end;
     button {

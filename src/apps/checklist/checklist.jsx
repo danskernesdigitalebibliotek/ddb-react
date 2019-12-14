@@ -13,19 +13,19 @@ function getList(length) {
 
 function SkeletonElement(_, index) {
   return (
-    <li key={index} className="ddb-list__item">
-      <section className="ddb-list__inner">
-        <article className="ddb-list__content">
-          <figure className="ddb-list__cover">
+    <li key={index} className="ddb-list-item">
+      <section className="ddb-list-item__inner">
+        <article className="ddb-list-item__content">
+          <figure className="ddb-list-item__cover">
             <Skeleton br="0px" mb="0px" mt="0px" height="154px" width="100px" />
           </figure>
-          <div className="ddb-list__data">
+          <div className="ddb-list-item__data">
             <Skeleton width="45px" mb="12px" />
             <Skeleton width="145px" mb="12px" />
             <Skeleton width="95px" />
           </div>
         </article>
-        <aside className="ddb-list__button ddb-list__button--remove">
+        <aside className="ddb-list-item__buttons ddb-list-item__buttons--remove">
           <Skeleton width="151px" height="50px" className="ddb-btn" />
         </aside>
       </section>
@@ -62,10 +62,10 @@ function Checklist({
   return (
     <UnorderedList>
       {items.map(item => (
-        <li key={item.pid} className="ddb-list__item">
-          <section className="ddb-list__inner">
-            <article className="ddb-list__content">
-              <figure className="ddb-list__cover">
+        <li key={item.pid} className="ddb-list-item">
+          <section className="ddb-list-item__inner">
+            <article className="ddb-list-item__content">
+              <figure className="ddb-list-item__cover">
                 <a
                   href={createPath({
                     url: materialUrl,
@@ -76,7 +76,7 @@ function Checklist({
                   <img src={item.coverUrl} alt={item.title} />
                 </a>
               </figure>
-              <div className="ddb-list__data">
+              <div className="ddb-list-item__data">
                 {item.type}
                 <a
                   href={createPath({
@@ -108,7 +108,7 @@ function Checklist({
                 </p>
               </div>
             </article>
-            <aside className="ddb-list__button ddb-list__button--remove">
+            <aside className="ddb-list-item__buttons ddb-list-item__buttons--remove">
               <Button
                 className="ddb-btn--charcoal"
                 onClick={() => onRemove(item.pid)}
