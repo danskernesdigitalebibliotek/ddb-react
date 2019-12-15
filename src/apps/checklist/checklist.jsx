@@ -1,35 +1,20 @@
 import React from "react";
 import PropTypes from "prop-types";
 import urlPropType from "url-prop-type";
-import Skeleton from "../../components/atoms/skeleton/skeleton";
+import Skeleton, { getList } from "../../components/atoms/skeleton/skeleton";
 import Button from "../../components/atoms/button/button";
 import UnorderedList from "../../components/atoms/list/list";
 import Alert from "../../components/alert/alert";
-import createPath from "../../core/createPath";
-
-function getList(length) {
-  return Array.from(new Array(length));
-}
+import ListItem from "../../components/list-item/list-item";
+import SimpleMaterial, {
+  SimpleMaterialSkeleton
+} from "../../components/simple-material/simple-material";
 
 function SkeletonElement(_, index) {
   return (
-    <li key={index} className="ddb-list__item">
-      <section className="ddb-list__inner">
-        <article className="ddb-list__content">
-          <figure className="ddb-list__cover">
-            <Skeleton br="0px" mb="0px" mt="0px" height="154px" width="100px" />
-          </figure>
-          <div className="ddb-list__data">
-            <Skeleton width="45px" mb="12px" />
-            <Skeleton width="145px" mb="12px" />
-            <Skeleton width="95px" />
-          </div>
-        </article>
-        <aside className="ddb-list__button ddb-list__button--remove">
-          <Skeleton width="151px" height="50px" className="ddb-btn" />
-        </aside>
-      </section>
-    </li>
+    <ListItem key={index} aside={<Skeleton width="151px" height="50px" />}>
+      <SimpleMaterialSkeleton />
+    </ListItem>
   );
 }
 
@@ -41,18 +26,15 @@ function Checklist({
   authorUrl,
   removeButtonText,
   emptyListText,
-  errorText
+  errorText,
+  ofText
 }) {
   if (loading === "failed") {
     return <Alert type="assertive" variant="warning" message={errorText} />;
   }
 
   if (loading === "active") {
-    return (
-      <UnorderedList className="ddb-skeleton-wrapper">
-        {getList(4).map(SkeletonElement)}
-      </UnorderedList>
-    );
+    return <UnorderedList>{getList(4).map(SkeletonElement)}</UnorderedList>;
   }
 
   if (loading === "finished" && items.length === 0) {
@@ -62,62 +44,27 @@ function Checklist({
   return (
     <UnorderedList>
       {items.map(item => (
-        <li key={item.pid} className="ddb-list__item">
-          <section className="ddb-list__inner">
-            <article className="ddb-list__content">
-              <figure className="ddb-list__cover">
-                <a
-                  href={createPath({
-                    url: materialUrl,
-                    property: ":pid",
-                    value: item.pid
-                  })}
-                >
-                  <img src={item.coverUrl} alt={item.title} />
-                </a>
-              </figure>
-              <div className="ddb-list__data">
-                {item.type}
-                <a
-                  href={createPath({
-                    url: materialUrl,
-                    property: ":pid",
-                    value: item.pid
-                  })}
-                >
-                  <h2>{item.title}</h2>
-                </a>
-                <p>
-                  {item.creators.map((creator, index) => {
-                    return (
-                      <span key={creator}>
-                        <a
-                          href={createPath({
-                            url: authorUrl,
-                            property: ":author",
-                            value: creator
-                          })}
-                        >
-                          {creator}
-                        </a>
-                        {item.creator[index + 1] ? ", " : " "}
-                      </span>
-                    );
-                  })}
-                  ({item.year})
-                </p>
-              </div>
-            </article>
-            <aside className="ddb-list__button ddb-list__button--remove">
-              <Button
-                className="ddb-btn--charcoal"
-                onClick={() => onRemove(item.pid)}
-              >
-                {removeButtonText}
-              </Button>
-            </aside>
-          </section>
-        </li>
+        <ListItem
+          key={item.pid}
+          aside={
+            <Button
+              className="ddb-checklist__button"
+              variant="charcoal"
+              align="left"
+              onClick={() => onRemove(item.pid)}
+            >
+              {removeButtonText}
+            </Button>
+          }
+        >
+          <SimpleMaterial
+            item={item}
+            materialUrl={materialUrl}
+            authorUrl={authorUrl}
+            ofText={ofText}
+            dataClass="ddb-checklist__data"
+          />
+        </ListItem>
       ))}
     </UnorderedList>
   );
@@ -145,7 +92,8 @@ Checklist.propTypes = {
   authorUrl: PropTypes.string.isRequired,
   removeButtonText: PropTypes.string.isRequired,
   emptyListText: PropTypes.string.isRequired,
-  errorText: PropTypes.string.isRequired
+  errorText: PropTypes.string.isRequired,
+  ofText: PropTypes.string.isRequired
 };
 
 export default Checklist;

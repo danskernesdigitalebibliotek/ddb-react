@@ -12,7 +12,7 @@ import { getToken } from "./token";
  */
 
 /**
- * https://github.com/reload/follow-searches/blob/develop/spec/follow-searches-1.0.0.yaml
+ * https://github.com/reload/follow-searches/blob/develop/spec/follow-searches-1.1.0.yaml
  *
  * @class FollowSearches
  */
@@ -90,21 +90,29 @@ class FollowSearches {
    * @param {object} options
    * @param {string} options.listName
    * @param {number} options.searchId
+   * @param {string[]} options.fields https://raw.githubusercontent.com/DBCDK/serviceprovider/master/doc/work-context.jsonld
    * @returns {Promise<Material[]>} materials pids of the search.
    * @memberof FollowSearches
    */
-  async getResultsForSearch({ listName = "default", searchId } = {}) {
+  async getResultsForSearch({
+    listName = "default",
+    searchId,
+    fields = ["pid", "dcTitleFull"]
+  } = {}) {
     if (!searchId) {
       throw Error("searchId must be provided");
     }
-
-    const raw = await fetch(`${this.baseUrl}/list/${listName}/${searchId}`, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${this.token}`
+    const formattedFields = fields.map(encodeURIComponent).join(",");
+    const raw = await fetch(
+      `${this.baseUrl}/list/${listName}/${searchId}?fields=${formattedFields}`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${this.token}`
+        }
       }
-    });
+    );
 
     const response = await raw.json();
     return response.materials;
