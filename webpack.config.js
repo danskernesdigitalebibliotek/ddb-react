@@ -1,5 +1,6 @@
 const path = require("path");
 const glob = require("glob");
+const BundleAnalyzerPlugin = require('@bundle-analyzer/webpack-plugin');
 
 module.exports = (_env, argv) => {
   const production = argv.mode !== "development";
@@ -9,6 +10,11 @@ module.exports = (_env, argv) => {
     acc[distPath] = path;
     return acc;
   }, {});
+
+  const plugins = [];
+  if (process.env.BUNDLE_ANALYZER_TOKEN) {
+    plugins.push(new BundleAnalyzerPlugin({ token: process.env.BUNDLE_ANALYZER_TOKEN }));
+  }
 
   return {
     entry: {
@@ -43,6 +49,7 @@ module.exports = (_env, argv) => {
     stats: {
       entrypoints: false,
       modules: false
-    }
+    },
+    plugins: plugins
   };
 };
