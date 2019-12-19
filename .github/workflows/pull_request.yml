@@ -68,8 +68,8 @@ jobs:
       - name: Lint Javascript
         run: yarn lint:js
 
-  jest:
-    name: Test .js and .jsx
+  test:
+    name: Integration test
     if: '!github.event.deleted'
     runs-on: ubuntu-latest
     steps:
@@ -90,5 +90,28 @@ jobs:
             ${{ runner.os }}-yarn-
       - name: Install Dependencies
         run: yarn install
-      - name: Run test
-        run: yarn test
+      - name: Build storybook
+        run: yarn build:storybook
+      - name: Cypress run
+        uses: cypress-io/github-action@v1
+        with:
+          start: yarn start:storybook:test
+          wait-on: 'http://localhost:57021'
+          browser: chrome
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+      - name: Upload videos
+        uses: actions/upload-artifact@v1
+        if: always()
+        with:
+          name: cypress-videos
+          path: cypress/videos
+      - name: Upload coverage to Codecov  
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true

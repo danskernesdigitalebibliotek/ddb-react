@@ -1,6 +1,9 @@
 node_modules
 dist
 dev
+cypress/videos/apps
+coverage
+.nyc_output
 index.html
 .token
 .vscode
