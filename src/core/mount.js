@@ -12,7 +12,7 @@ import ErrorBoundary from "../components/alert/alert";
  */
 function mount(context) {
   if (!context) return;
-  const appContainers = context.querySelectorAll("[data-ddb-app]");
+  const appContainers = [...context.querySelectorAll("[data-ddb-app]")];
   appContainers.forEach(function mountApp(container) {
     const appName = container?.dataset?.ddbApp;
     const app = window.ddbReact?.apps?.[appName];
@@ -36,7 +36,7 @@ function mount(context) {
  */
 function unMount(context) {
   if (!context) return;
-  const appContainers = context.querySelectorAll("[data-ddb-app]");
+  const appContainers = [...context.querySelectorAll("[data-ddb-app]")];
   appContainers.forEach(function unMountApp(container) {
     const appContainerToUnmount = container;
     appContainerToUnmount.innerHTML = "";
