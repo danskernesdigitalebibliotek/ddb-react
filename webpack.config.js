@@ -2,6 +2,8 @@ const path = require("path");
 const glob = require("glob");
 const BundleAnalyzerPlugin = require("@bundle-analyzer/webpack-plugin");
 
+const polyfill = require("./polyfill.config.js");
+
 module.exports = (_env, argv) => {
   const production = argv.mode === "production";
 
@@ -25,8 +27,7 @@ module.exports = (_env, argv) => {
   return {
     entry: {
       ...entry,
-      mount: "./src/core/mount.js",
-      polyfills: "./src/core/polyfills.js"
+      mount: "./src/core/mount.js"
     },
     output: {
       filename: "[name].js",
@@ -48,8 +49,16 @@ module.exports = (_env, argv) => {
       rules: [
         {
           test: /\.(js|jsx)$/,
-          exclude: /node_modules/,
-          use: ["babel-loader", "eslint-loader"]
+          exclude: new RegExp(`node_modules/(?!(${polyfill.join("|")})/).*`),
+          use: [
+            {
+              loader: "babel-loader",
+              options: {
+                configFile: path.resolve(__dirname, "babel.config.json")
+              }
+            },
+            "eslint-loader"
+          ]
         }
       ]
     },
