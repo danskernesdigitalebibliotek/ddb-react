@@ -6,6 +6,13 @@
       "namespaces": ["ddb-"],
       "patternPrefixes": [],
       "helperPrefixes": []
-    }
+    },
+    "declaration-property-value-blacklist": [
+      {"/.*/": "unset"},
+      {
+        "message": "people still use IE11 - \"unset\" is not supported.",
+        "severity": "warning"
+      }
+    ]
   }
 }
