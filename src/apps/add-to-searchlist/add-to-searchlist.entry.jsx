@@ -25,23 +25,27 @@ function AddToSearchlistEntry({
   const openDialog = () => setAppState("active");
   const closeDialog = () => setAppState("inactive");
 
+  function onAddToSearchListSuccess() {
+    setTimeout(() => {
+      setAppState("inactive");
+    }, 10000);
+  }
+
+  function onAddToSearchListError() {
+    setAppState("failed");
+    setTimeout(() => {
+      setAppState("active");
+    }, 2000);
+  }
+
   function addToSearchList(title) {
     setAppState("requesting");
 
     const client = new FollowSearches({ baseUrl: followSearchesUrl });
     client
       .addSearch({ title, query: searchQuery })
-      .then(function onSuccess() {
-        setTimeout(() => {
-          setAppState("inactive");
-        }, 10000);
-      })
-      .catch(function onError() {
-        setAppState("failed");
-        setTimeout(() => {
-          setAppState("active");
-        }, 2000);
-      });
+      .then(onAddToSearchListSuccess)
+      .catch(onAddToSearchListError);
   }
   return (
     <AddToSearchlist

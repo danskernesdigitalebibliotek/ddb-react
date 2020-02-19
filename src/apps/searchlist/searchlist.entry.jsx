@@ -16,32 +16,39 @@ function SearchlistEntry({
   const [searches, setSearches] = useState([]);
   const [loading, setLoading] = useState("inactive");
 
-  useEffect(
-    function getSearches() {
-      setLoading("active");
+  useEffect(() => {
+    function onGetSearchesFinished(result) {
+      setSearches(result);
+      setLoading("finished");
+    }
 
-      const client = new FollowSearches({ baseUrl: followSearchesUrl });
-      client
-        .getSearches()
-        .then(function onSuccess(result) {
-          setSearches(result);
-          setLoading("finished");
-        })
-        .catch(function onError() {
-          setLoading("failed");
-        });
-    },
-    [followSearchesUrl]
-  );
+    function onGetSearchesError() {
+      setLoading("failed");
+    }
+
+    setLoading("active");
+
+    const client = new FollowSearches({ baseUrl: followSearchesUrl });
+    client
+      .getSearches()
+      .then(onGetSearchesFinished)
+      .catch(onGetSearchesError);
+  }, [followSearchesUrl]);
 
   function removeSearch(id) {
     const fallback = [...searches];
-    setSearches(searches.filter(search => search.id !== id));
+
+    function removeDeletedSearch(search) {
+      return search.id !== id;
+    }
+    setSearches(searches.filter(removeDeletedSearch));
+
+    function onDeleteSearchError() {
+      setSearches(fallback);
+    }
 
     const client = new FollowSearches({ baseUrl: followSearchesUrl });
-    client.deleteSearch({ searchId: id }).catch(function onError() {
-      setSearches(fallback);
-    });
+    client.deleteSearch({ searchId: id }).catch(onDeleteSearchError);
   }
 
   return (

@@ -102,7 +102,7 @@ class OpenPlatform {
       const responses = chunk(pids, pidLimit).map(pidChunk =>
         this.getWork({ pids: pidChunk, fields })
       );
-      return Promise.all(responses).then(function mergeResults(results) {
+      return Promise.all(responses).then(results => {
         return [].concat(...results);
       });
     }
@@ -145,17 +145,16 @@ class OpenPlatform {
    * @returns {Promise<boolean>}
    */
   async canBeOrdered(pid) {
-    return this.getAvailability({ pids: [pid] }).then(function getResult(
-      response
-    ) {
+    function getAvailabilityResult(response) {
       // The API says there can be more than one reply, but nobody
       // defines what that means. So if case there's more than one
       // reply, only return true if all items are order-able.
 
-      return response.every(function orderIsPossible(orderStat) {
+      return response.every(orderStat => {
         return orderStat.orderPossible;
       });
-    });
+    }
+    return this.getAvailability({ pids: [pid] }).then(getAvailabilityResult);
   }
 
   /**
@@ -205,7 +204,7 @@ class OpenPlatform {
       this.getUser(),
       this.getBranch(pickupBranch)
     ]);
-    branch.orderParameters.forEach(function eachOrderParameter(parameter) {
+    function eachOrderParameter(parameter) {
       switch (parameter) {
         case "userId":
         case "pincode":
@@ -237,7 +236,8 @@ class OpenPlatform {
         // Oh bollocks, we have no idea what to do. Try soldiering on
         // and hope the best.
       }
-    });
+    }
+    branch.orderParameters.forEach(eachOrderParameter);
 
     return this.request(`order?${parameters.join("&")}`, {
       method: "POST",

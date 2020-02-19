@@ -23,45 +23,51 @@ function OrderMaterialEntry({
 }) {
   const [status, setStatus] = useState("initial");
 
+  function onOrderMaterialFinished() {
+    setStatus("finished");
+  }
+
+  function onOrderMaterialError() {
+    setStatus("failed");
+  }
+
   function orderMaterial() {
     setStatus("processing");
     client
       .orderMaterial({ pids: [id], pickupBranch, expires })
-      .then(function materialOrdered() {
-        setStatus("finished");
-      })
-      .catch(function onError() {
-        setStatus("failed");
-      });
+      .then(onOrderMaterialFinished)
+      .catch(onOrderMaterialError);
   }
 
-  useEffect(
-    function getOrderStatus() {
-      setStatus("checking");
-      // Check that the pickup branch accepts inter-library loans.
-      client
-        .getBranch(pickupBranch)
-        .then(function onBranchResult(branch) {
-          if (branch.willReceiveIll !== "1") {
-            setStatus("invalid branch");
-          } else {
-            // Check that the material is available for ILL.
-            client
-              .canBeOrdered(id)
-              .then(function onAvailabilityResult(available) {
-                setStatus(available ? "ready" : "unavailable");
-              })
-              .catch(function onError() {
-                setStatus("failed");
-              });
-          }
-        })
-        .catch(function onError() {
-          setStatus("failed");
-        });
-    },
-    [id, pickupBranch]
-  );
+  useEffect(() => {
+    function onGetPickupBranch(branch) {
+      if (branch.willReceiveIll !== "1") {
+        throw Error("invalid branch");
+      }
+      return id;
+    }
+
+    function onCanBeOrderedFinished(available) {
+      setStatus(available ? "ready" : "unavailable");
+    }
+
+    function onInitialOrderMaterialError(error) {
+      if (error.message === "invalid branch") {
+        setStatus(error.message);
+      } else {
+        setStatus("failed");
+      }
+    }
+
+    setStatus("checking");
+    // Check that the pickup branch accepts inter-library loans.
+    client
+      .getBranch(pickupBranch)
+      .then(onGetPickupBranch)
+      .then(pid => client.canBeOrdered(pid))
+      .then(onCanBeOrderedFinished)
+      .catch(onInitialOrderMaterialError);
+  }, [id, pickupBranch]);
 
   return (
     <OrderMaterial

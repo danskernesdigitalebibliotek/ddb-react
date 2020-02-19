@@ -15,16 +15,18 @@ function AddToChecklistEntry({
 }) {
   const [loading, setLoading] = useState("inactive");
 
+  function onAddListMaterialError() {
+    setLoading("failed");
+    setTimeout(() => {
+      setLoading("inactive");
+    }, 4000);
+  }
+
   function addToList() {
     setLoading("active");
 
     const client = new MaterialList({ baseUrl: materialListUrl });
-    client.addListMaterial({ materialId: id }).catch(function onError() {
-      setLoading("failed");
-      setTimeout(function onRestore() {
-        setLoading("inactive");
-      }, 4000);
-    });
+    client.addListMaterial({ materialId: id }).catch(onAddListMaterialError);
   }
 
   return (
