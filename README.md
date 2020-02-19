@@ -10,6 +10,8 @@
   - [Requirements](#requirements)
     - [Retrieving an access token](#retrieving-an-access-token)
   - [Installation](#installation)
+  - [Standard and style](#standard-and-style)
+    - [JavaScript + JSX](#javascript--jsx)
   - [Create a new application](#create-a-new-application)
   - [Style your application](#style-your-application)
   - [Cross application components](#cross-application-components)
@@ -67,6 +69,16 @@ make token
 ```bash
 make up
 ```
+
+### Standard and style
+
+#### JavaScript + JSX
+
+For static code analysis we make use of the [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript) and for formatting we make use of [Prettier](https://github.com/prettier/prettier) with the default configuration.
+The above choices have been influenced by a multitude of factors:
+
+- Historically Drupal core have been making use of the Airbnb JavaScript Style Guide.
+- Airbnb's standard is comparatively the [best known](https://github.com/airbnb/javascript/stargazers) and one of the [most used](https://github.com/airbnb/javascript/network/dependents?package_id=UGFja2FnZS0xODIxMTAxOA%3D%3D) in the JavaScript coding standard landscape. This makes future adoption easier for onboarding contributors and support is to be expected for a long time.
 
 When storybook is started, you can access it at: [ddb-react.docker](http://ddb-react.docker)
 
