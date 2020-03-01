@@ -3,6 +3,7 @@ import "./dev-fonts.scss";
 import "../src/components/components.scss";
 import { setToken } from "../src/core/token";
 import "../src/core/mount";
+import isEmpty from "lodash/isEmpty";
 
 /**
  * DDB_TOKEN is set in ".storybook/webpack.config.js"
@@ -38,6 +39,6 @@ setToken(token);
  * as to not override the ddbReact object. We presume for now that if a user is in a development environment
  * they are authenticated and only in a development environment a token is available.
  */
-window.ddbReact.userAuthenticated = true;
+window.ddbReact.userAuthenticated = !isEmpty(token);
 
 configure(require.context("../src", true, /\.dev\.jsx$/), module);
