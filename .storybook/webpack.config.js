@@ -27,6 +27,14 @@ module.exports = async ({ config }) => {
       include: path.resolve(__dirname, "../")
     }
   ];
+  const resolve = {
+    ...config.resolve,
+    alias: {
+      ...config.resolve.alias,
+      react: "preact/compat",
+      "react-dom": "preact/compat"
+    }
+  }
   const plugins = [
     ...config.plugins,
     new DefinePlugin({
@@ -34,5 +42,5 @@ module.exports = async ({ config }) => {
       ENV: JSON.stringify(process.env.NODE_ENV)
     })
   ]
-  return { ...config, plugins, module: { ...config.module, rules } };
+  return { ...config, plugins, resolve, module: { ...config.module, rules } };
 };
