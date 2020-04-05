@@ -34,15 +34,19 @@ module.exports = (_env, argv) => {
     },
     mode: argv.mode,
     devtool: production ? "source-map" : "inline-source-map",
+    resolve: {
+      extensions: [".js", ".jsx", ".json"],
+      alias: {
+        react: "preact/compat",
+        "react-dom": "preact/compat"
+      }
+    },
     optimization: {
       runtimeChunk: "single",
       splitChunks: {
         name: () => "bundle",
         chunks: "all"
       }
-    },
-    resolve: {
-      extensions: [".js", ".jsx", ".json"]
     },
     module: {
       rules: [
