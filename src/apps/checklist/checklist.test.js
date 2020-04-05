@@ -107,10 +107,10 @@ describe("Checklist", () => {
       response: {}
     });
     cy.visit("/iframe.html?id=apps-checklist--entry");
-    cy.clock();
     cy.contains("Star Wars - the last Jedi");
     cy.contains("Fjern fra listen").click();
     cy.contains("Et eller andet gik galt.");
+    cy.clock();
     cy.tick(2000);
     cy.contains("Star Wars - the last Jedi");
     cy.contains("Ingen materialer på listen").should("not.be.visible");
