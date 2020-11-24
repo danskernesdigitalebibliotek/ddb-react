@@ -4,6 +4,7 @@ import urlPropType from "url-prop-type";
 
 import OrderMaterial from "./order-material";
 import OpenPlatform from "../../core/OpenPlatform";
+import DingIll from "../../core/DingIll";
 import User from "../../core/user";
 
 /**
@@ -30,6 +31,7 @@ function OrderMaterialEntry({
   invalidPickupBranchText,
   ids,
   loginUrl,
+  illCheckUrl,
   pickupBranch,
   expires
 }) {
@@ -50,10 +52,11 @@ function OrderMaterialEntry({
 
   useEffect(() => {
     const client = new OpenPlatform();
+    const dingIll = new DingIll(illCheckUrl);
     // Check that the material is available for ILL.
     setStatus("checking");
-    client
-      .canBeOrdered(idsArray(ids))
+    dingIll
+      .isAvailableForIll(idsArray(ids))
       .then(available => {
         if (!available) {
           setStatus("unavailable");
@@ -81,7 +84,7 @@ function OrderMaterialEntry({
       .catch(() => {
         setStatus("failed");
       });
-  }, [ids, pickupBranch]);
+  }, [ids, pickupBranch, illCheckUrl]);
 
   return (
     <OrderMaterial
@@ -115,6 +118,7 @@ OrderMaterialEntry.propTypes = {
     PropTypes.arrayOf(PropTypes.string)
   ]).isRequired,
   loginUrl: urlPropType.isRequired,
+  illCheckUrl: urlPropType.isRequired,
   pickupBranch: PropTypes.string.isRequired,
   expires: PropTypes.string.isRequired
 };

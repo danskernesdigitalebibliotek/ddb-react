@@ -21,6 +21,7 @@ Entry.args = {
   ids: "870970-basis:47092183,870970-basis:51980190,870970-basis:23154382",
   loginUrl:
     "https://lollandbib.dk/adgangsplatformen/login?destination=ting/object/:id",
+  illCheckUrl: "https://lollandbib.dk/ding_ill/openholdingstatus",
   pickupBranch: "790900",
   expires: "2021-06-24"
 };
