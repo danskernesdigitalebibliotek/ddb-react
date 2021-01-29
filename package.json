@@ -1,7 +1,7 @@
 {
-  "name": "@reload/ddb-react",
+  "name": "@danskernesdigitalebibliotek/ddb-react",
   "license": "AGPL-3.0-only",
-  "repository": "git://github.com/reload/ddb-react.git",
+  "repository": "git://github.com/danskernesdigitalebibliotek/ddb-react.git",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
