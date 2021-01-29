@@ -1,0 +1,37 @@
+on:
+  push:
+    branches:
+      - 'master'
+
+name: Update latest release
+
+jobs:
+  release:
+    name: Upload latest release asset
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # Required to fetch all commits and tags
+          fetch-depth: 0
+      - name: Install Dependencies
+        uses: bahmutov/npm-install@v1
+      - name: Build artifacts
+        run: |
+          VERSION_FILE_NAME=$GITHUB_REPOSITORY \
+          VERSION_FILE_VERSION=$(git describe --tags --exclude=latest) \
+          yarn build
+      - name: Zip project
+        run: |
+          zip -r -j dist.zip dist/
+      - name: Install GHR
+        run: |
+          curl --fail --silent --location --output ghr.tar.gz https://github.com/tcnksm/ghr/releases/download/v0.13.0/ghr_v0.13.0_linux_amd64.tar.gz
+          tar -zxf ghr.tar.gz
+          echo "./ghr_v0.13.0_linux_amd64" >> $GITHUB_PATH
+      - name: Update latest release
+        run: |
+          ghr -prerelease -replace -delete -n Latest -c master latest dist.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
