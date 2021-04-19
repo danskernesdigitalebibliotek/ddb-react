@@ -10,6 +10,7 @@ const Template = args => <OrderMaterial {...args} />;
 export const Entry = Template.bind({});
 Entry.args = {
   text: "Bestil materiale",
+  helpText: "",
   errorText: "Der opstod en fejl",
   checkingText: "Undersøger mulighed for fjernlån",
   progressText: "Bestiller materiale",

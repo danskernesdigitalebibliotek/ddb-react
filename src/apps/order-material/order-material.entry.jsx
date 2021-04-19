@@ -22,6 +22,7 @@ function idsArray(ids) {
 
 function OrderMaterialEntry({
   text,
+  helpText,
   successText,
   successMessage,
   errorText,
@@ -89,6 +90,7 @@ function OrderMaterialEntry({
   return (
     <OrderMaterial
       text={text}
+      helpText={helpText}
       errorText={errorText}
       successText={successText}
       successMessage={successMessage}
@@ -106,6 +108,7 @@ function OrderMaterialEntry({
 
 OrderMaterialEntry.propTypes = {
   text: PropTypes.string,
+  helpText: PropTypes.string,
   errorText: PropTypes.string,
   checkingText: PropTypes.string,
   progressText: PropTypes.string,
@@ -125,6 +128,7 @@ OrderMaterialEntry.propTypes = {
 
 OrderMaterialEntry.defaultProps = {
   text: "Bestil materiale",
+  helpText: null,
   checkingText: "Undersøger mulighed for fjernlån",
   progressText: "Bestiller materiale",
   unavailableText: "Kan ikke fjernlånes",

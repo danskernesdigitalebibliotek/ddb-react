@@ -16,6 +16,7 @@ function OrderMaterial({
   invalidPickupBranchText,
   onClick,
   text,
+  helpText,
   errorText,
   successText,
   successMessage,
@@ -90,6 +91,9 @@ function OrderMaterial({
           >
             {text}
           </Button>
+          {helpText ? (
+            <div className="ddb-order-material__help">{helpText}</div>
+          ) : null}
         </div>
       );
   }
@@ -97,6 +101,7 @@ function OrderMaterial({
 
 OrderMaterial.propTypes = {
   text: PropTypes.string.isRequired,
+  helpText: PropTypes.string,
   errorText: PropTypes.string.isRequired,
   successText: PropTypes.string.isRequired,
   successMessage: PropTypes.string.isRequired,
@@ -120,6 +125,7 @@ OrderMaterial.propTypes = {
 };
 
 OrderMaterial.defaultProps = {
+  helpText: null,
   status: "initial"
 };
 
