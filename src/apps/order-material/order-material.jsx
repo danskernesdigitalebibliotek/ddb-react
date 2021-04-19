@@ -33,27 +33,43 @@ function OrderMaterial({
       return null;
 
     case "checking":
-      return <Alert message={checkingText} type="polite" variant="info" />;
+      return (
+        <div className="ddb-order-material__container">
+          <Alert message={checkingText} type="polite" variant="info" />
+        </div>
+      );
 
     case "unavailable":
-      return <Alert message={unavailableText} type="polite" variant="info" />;
+      return (
+        <div className="ddb-order-material__container">
+          <Alert message={unavailableText} type="polite" variant="info" />
+        </div>
+      );
 
     case "invalid branch":
       return (
-        <Alert
-          message={invalidPickupBranchText}
-          type="polite"
-          variant="warning"
-        />
+        <div className="ddb-order-material__container">
+          <Alert
+            message={invalidPickupBranchText}
+            type="polite"
+            variant="warning"
+          />
+        </div>
       );
 
     case "processing":
-      return <Alert message={progressText} type="polite" variant="info" />;
+      return (
+        <div className="ddb-order-material__container">
+          <Alert message={progressText} type="polite" variant="info" />
+        </div>
+      );
 
     case "finished":
       return (
         <>
-          <Alert message={successText} type="polite" variant="success" />
+          <div className="ddb-order-material__container">
+            <Alert message={successText} type="polite" variant="success" />
+          </div>
           <Dialog
             label="Tilføj søgning til liste"
             showCloseButton
@@ -67,7 +83,11 @@ function OrderMaterial({
       );
 
     case "failed":
-      return <Alert message={errorText} type="polite" variant="warning" />;
+      return (
+        <div className="ddb-order-material__container">
+          <Alert message={errorText} type="polite" variant="warning" />
+        </div>
+      );
 
     default:
       return (
