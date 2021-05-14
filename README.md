@@ -16,6 +16,7 @@ A set of React components and applications providing self-service features for D
   - [Installation](#installation)
   - [Standard and style](#standard-and-style)
     - [JavaScript + JSX](#javascript--jsx)
+      - [Editor integration](#editor-integration)
       - [Named functions Vs. Anonymous arrow functions](#named-functions-vs-anonymous-arrow-functions)
   - [Create a new application](#create-a-new-application)
     - [Application state-machine](#application-state-machine)
@@ -113,6 +114,13 @@ The above choices have been influenced by a multitude of factors:
 - Airbnb's standard is comparatively the [best known](https://github.com/airbnb/javascript/stargazers) and one of the [most used](https://github.com/airbnb/javascript/network/dependents?package_id=UGFja2FnZS0xODIxMTAxOA%3D%3D) in the JavaScript coding standard landscape. 
 
 This makes future adoption easier for onboarding contributors and support is to be expected for a long time.
+
+##### Editor integration
+
+Example editor configs that automates code quality and formatting in your editor of choice is provided.
+
+- VSCode: `make vscode-config`
+- IntelliJ: `make intellij-config`
 
 ##### Named functions Vs. Anonymous arrow functions
 
