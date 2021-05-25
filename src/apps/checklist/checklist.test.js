@@ -162,16 +162,14 @@ describe("Checklist", () => {
         status: 200,
         response: {
           statusCode: 200,
-          data: ids.map(id => {
-            return {
-              pid: [id.toString()],
-              dcCreator: ["Creator"],
-              // Include id in title so we have something to match against.
-              dcTitleFull: [`Material ${id}`],
-              typeBibDKType: ["Type"],
-              date: ["2018"]
-            };
-          })
+          data: ids.map(id => ({
+            pid: [id.toString()],
+            dcCreator: ["Creator"],
+            // Include id in title so we have something to match against.
+            dcTitleFull: [`Material ${id}`],
+            typeBibDKType: ["Type"],
+            date: ["2018"]
+          }))
         }
       });
     });

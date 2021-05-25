@@ -93,8 +93,7 @@ function getCover(amount = 10) {
       type: "pid",
       imageUrls: {
         large: {
-          url:
-            "https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_large/v1580475253/bogportalen.dk/9788772143804.jpg",
+          url: "https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_large/v1580475253/bogportalen.dk/9788772143804.jpg",
           format: "jpeg",
           size: "large"
         }
@@ -105,8 +104,7 @@ function getCover(amount = 10) {
       type: "pid",
       imageUrls: {
         large: {
-          url:
-            "https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_large/v1575217601/bogportalen.dk/9788762731103.jpg",
+          url: "https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_large/v1575217601/bogportalen.dk/9788762731103.jpg",
           format: "jpeg",
           size: "large"
         }
@@ -117,8 +115,7 @@ function getCover(amount = 10) {
       type: "pid",
       imageUrls: {
         large: {
-          url:
-            "https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_large/v1580477087/bogportalen.dk/9788772053264.jpg",
+          url: "https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_large/v1580477087/bogportalen.dk/9788772053264.jpg",
           format: "jpeg",
           size: "large"
         }
@@ -129,8 +126,7 @@ function getCover(amount = 10) {
       type: "pid",
       imageUrls: {
         large: {
-          url:
-            "https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_large/v1575214321/bogportalen.dk/9788741508146.jpg",
+          url: "https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_large/v1575214321/bogportalen.dk/9788741508146.jpg",
           format: "jpeg",
           size: "large"
         }
@@ -141,8 +137,7 @@ function getCover(amount = 10) {
       type: "pid",
       imageUrls: {
         large: {
-          url:
-            "https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_large/v1580478413/bogportalen.dk/9788702264524.jpg",
+          url: "https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_large/v1580478413/bogportalen.dk/9788702264524.jpg",
           format: "jpeg",
           size: "large"
         }
@@ -153,8 +148,7 @@ function getCover(amount = 10) {
       type: "pid",
       imageUrls: {
         large: {
-          url:
-            "https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_large/v1580475188/bogportalen.dk/9788740661279.jpg",
+          url: "https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_large/v1580475188/bogportalen.dk/9788740661279.jpg",
           format: "jpeg",
           size: "large"
         }
@@ -165,8 +159,7 @@ function getCover(amount = 10) {
       type: "pid",
       imageUrls: {
         large: {
-          url:
-            "https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_large/v1575214074/bogportalen.dk/9788793728233.jpg",
+          url: "https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_large/v1575214074/bogportalen.dk/9788793728233.jpg",
           format: "jpeg",
           size: "large"
         }
@@ -177,8 +170,7 @@ function getCover(amount = 10) {
       type: "pid",
       imageUrls: {
         large: {
-          url:
-            "https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_large/v1580475133/bogportalen.dk/9788741510415.jpg",
+          url: "https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_large/v1580475133/bogportalen.dk/9788741510415.jpg",
           format: "jpeg",
           size: "large"
         }
@@ -189,8 +181,7 @@ function getCover(amount = 10) {
       type: "pid",
       imageUrls: {
         large: {
-          url:
-            "https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_large/v1580476960/bogportalen.dk/9788772187471.jpg",
+          url: "https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_large/v1580476960/bogportalen.dk/9788772187471.jpg",
           format: "jpeg",
           size: "large"
         }
@@ -201,8 +192,7 @@ function getCover(amount = 10) {
       type: "pid",
       imageUrls: {
         large: {
-          url:
-            "https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_large/v1580475217/bogportalen.dk/9788758836713.jpg",
+          url: "https://res.cloudinary.com/dandigbib/image/upload/t_ddb_cover_large/v1580475217/bogportalen.dk/9788758836713.jpg",
           format: "jpeg",
           size: "large"
         }
@@ -218,9 +208,7 @@ describe("Related Materials", () => {
   });
   it("Should show a link that leads to the full suggested search", () => {
     cy.visit("/iframe.html?id=apps-related-materials--entry");
-    cy.contains("Søg")
-      .should("have.attr", "href")
-      .and("include", "magi");
+    cy.contains("Søg").should("have.attr", "href").and("include", "magi");
   });
   it("Should show loading elements for the requested amount of materials", () => {
     cy.server();

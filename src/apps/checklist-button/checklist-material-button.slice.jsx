@@ -3,11 +3,10 @@ import MaterialList from "../../core/MaterialList";
 
 export const resetStatus = createAsyncThunk(
   "checklistMaterial/resetStatus",
-  () => {
-    return new Promise(resolve => {
+  () =>
+    new Promise(resolve => {
       setTimeout(() => resolve(), 4000);
-    });
-  }
+    })
 );
 
 export const checkOnListAction = createAsyncThunk(

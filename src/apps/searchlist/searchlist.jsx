@@ -60,41 +60,37 @@ function Searchlist({
 
   return (
     <UnorderedList>
-      {searches.map(search => {
-        return (
-          <ListItem
-            className="ddb-searchlist__item"
-            key={search.id}
-            childrenClass="ddb-searchlist__children"
-            asideClass="ddb-searchlist__buttons"
-            aside={
-              <>
-                <Button
-                  className="ddb-searchlist__remove-button ddb-searchlist__button"
-                  onClick={() => onRemoveSearch(search.id)}
-                  variant="secondary"
-                  align="center"
-                >
-                  {removeButtonText}
-                </Button>
-                <Button
-                  className="ddb-searchlist__result-button ddb-searchlist__button"
-                  align="center"
-                  href={fullSearchUrl(searchUrl, search.query)}
-                >
-                  {goToSearchText}
-                </Button>
-              </>
-            }
-          >
-            <h2 className="ddb-searchlist__header">
-              <a href={fullSearchUrl(searchUrl, search.query)}>
-                {search.title}
-              </a>
-            </h2>
-          </ListItem>
-        );
-      })}
+      {searches.map(search => (
+        <ListItem
+          className="ddb-searchlist__item"
+          key={search.id}
+          childrenClass="ddb-searchlist__children"
+          asideClass="ddb-searchlist__buttons"
+          aside={
+            <>
+              <Button
+                className="ddb-searchlist__remove-button ddb-searchlist__button"
+                onClick={() => onRemoveSearch(search.id)}
+                variant="secondary"
+                align="center"
+              >
+                {removeButtonText}
+              </Button>
+              <Button
+                className="ddb-searchlist__result-button ddb-searchlist__button"
+                align="center"
+                href={fullSearchUrl(searchUrl, search.query)}
+              >
+                {goToSearchText}
+              </Button>
+            </>
+          }
+        >
+          <h2 className="ddb-searchlist__header">
+            <a href={fullSearchUrl(searchUrl, search.query)}>{search.title}</a>
+          </h2>
+        </ListItem>
+      ))}
     </UnorderedList>
   );
 }

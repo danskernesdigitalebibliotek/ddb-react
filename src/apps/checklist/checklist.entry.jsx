@@ -68,11 +68,7 @@ function ChecklistEntry({
    */
   function onRemove(materialId) {
     const fallbackList = [...list];
-    setList(
-      list.filter(item => {
-        return item.pid !== materialId;
-      })
-    );
+    setList(list.filter(item => item.pid !== materialId));
 
     function setDeleteMaterialRestoreStatus() {
       setStatus("ready");
