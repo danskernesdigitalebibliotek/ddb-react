@@ -1,12 +1,9 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import urlPropType from "url-prop-type";
 
 import Button from "../../components/atoms/button/button";
 import Dialog from "../../components/atoms/dialog/dialog";
 import Alert from "../../components/alert/alert";
-import User from "../../core/user";
-import replacePlaceholders from "../../core/replacePlaceholders";
 
 function OrderMaterial({
   status,
@@ -19,9 +16,7 @@ function OrderMaterial({
   helpText,
   errorText,
   successText,
-  successMessage,
-  loginUrl,
-  materialIds
+  successMessage
 }) {
   const [open, setOpen] = useState(true);
   const closeDialog = () => setOpen(false);
@@ -71,7 +66,7 @@ function OrderMaterial({
             <Alert message={successText} type="polite" variant="success" />
           </div>
           <Dialog
-            label="Tilføj søgning til liste"
+            label="Materialet bestilt"
             showCloseButton
             dropDown
             isOpen={open}
@@ -92,23 +87,7 @@ function OrderMaterial({
     default:
       return (
         <div className="ddb-order-material__container">
-          <Button
-            href={
-              !User.isAuthenticated()
-                ? replacePlaceholders({
-                    text: loginUrl,
-                    tags: {
-                      // Urls only support a single material id so assume we
-                      // want to use the first.
-                      id: encodeURIComponent(materialIds.first)
-                    }
-                  })
-                : undefined
-            }
-            variant="black"
-            align="left"
-            onClick={onClick}
-          >
+          <Button variant="black" align="left" onClick={onClick}>
             {text}
           </Button>
           {helpText ? (
@@ -129,7 +108,6 @@ OrderMaterial.propTypes = {
   progressText: PropTypes.string.isRequired,
   unavailableText: PropTypes.string.isRequired,
   invalidPickupBranchText: PropTypes.string.isRequired,
-  loginUrl: urlPropType.isRequired,
   onClick: PropTypes.func.isRequired,
   status: PropTypes.oneOf([
     "initial",
@@ -140,8 +118,7 @@ OrderMaterial.propTypes = {
     "processing",
     "failed",
     "finished"
-  ]),
-  materialIds: PropTypes.arrayOf(PropTypes.string).isRequired
+  ])
 };
 
 OrderMaterial.defaultProps = {

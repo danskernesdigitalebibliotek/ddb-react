@@ -3,6 +3,7 @@ import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage/session";
 import userReducer from "./user.slice";
 import checklistMaterialButtonReducer from "../apps/checklist-button/checklist-material-button.slice";
+import orderMaterialReducer from "../apps/order-material/order-material.slice";
 
 const persistConfig = {
   key: "ddb-react",
@@ -14,6 +15,7 @@ export const store = configureStore({
     persistConfig,
     combineReducers({
       checklistMaterialButton: checklistMaterialButtonReducer,
+      orderMaterial: orderMaterialReducer,
       user: userReducer
     })
   ),
