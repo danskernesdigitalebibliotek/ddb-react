@@ -5,7 +5,7 @@ export default {
   title: "Atoms/Button"
 };
 
-const Template = args => <Button {...args}>{args.children}</Button>;
+const Template = args => <Button {...args} />;
 
 export const Base = Template.bind({});
 Base.args = {

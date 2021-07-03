@@ -101,9 +101,7 @@ class OpenPlatform {
       const responses = chunk(pids, pidLimit).map(pidChunk =>
         this.getWork({ pids: pidChunk, fields })
       );
-      return Promise.all(responses).then(results => {
-        return [].concat(...results);
-      });
+      return Promise.all(responses).then(results => [].concat(...results));
     }
 
     const formattedPids = formatUrlArray(pids);
@@ -149,17 +147,18 @@ class OpenPlatform {
    * @returns {Promise<boolean>}
    */
   async canBeOrdered(pids) {
-    return this.getAvailability({ pids }).then(response => {
+    return this.getAvailability({ pids }).then(response =>
       // The API returns availability information for each pid. Reduce these to
       // a single value by checking if at least one material can be ordered.
-      return response.some(orderStat => {
-        // WillLend is whether the library will lend out the material.
-        // Usually false for materials they don't have. OrderPossible
-        // is whether the material can be ordered. Both have to be
-        // true for the material to be ILL orderable.
-        return orderStat.willLend && orderStat.orderPossible;
-      });
-    });
+      response.some(
+        orderStat =>
+          // WillLend is whether the library will lend out the material.
+          // Usually false for materials they don't have. OrderPossible
+          // is whether the material can be ordered. Both have to be
+          // true for the material to be ILL orderable.
+          orderStat.willLend && orderStat.orderPossible
+      )
+    );
   }
 
   /**

@@ -27,8 +27,9 @@ function RelatedMaterial({
   const alt = `${type} - ${formattedCreators}: ${title} (${year})`;
   return (
     <a
-      className={`ddb-related-material ${imageStatus === "finished" &&
-        "ddb-related-material--finished"}`}
+      className={`ddb-related-material ${
+        imageStatus === "finished" && "ddb-related-material--finished"
+      }`}
       href={replacePlaceholders({
         text: materialUrl,
         placeholders: {

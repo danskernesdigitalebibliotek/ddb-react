@@ -74,23 +74,21 @@ function SimpleMaterial({
           {item.creators && (
             <span className="ddb-simple-material__author">
               {`${ofText} `}
-              {item.creators.map((creator, index) => {
-                return (
-                  <span key={creator}>
-                    <a
-                      href={replacePlaceholders({
-                        text: authorUrl,
-                        placeholders: {
-                          author: encodeURIComponent(creator)
-                        }
-                      })}
-                    >
-                      {creator}
-                    </a>
-                    {item.creators[index + 1] ? ", " : " "}
-                  </span>
-                );
-              })}
+              {item.creators.map((creator, index) => (
+                <span key={creator}>
+                  <a
+                    href={replacePlaceholders({
+                      text: authorUrl,
+                      placeholders: {
+                        author: encodeURIComponent(creator)
+                      }
+                    })}
+                  >
+                    {creator}
+                  </a>
+                  {item.creators[index + 1] ? ", " : " "}
+                </span>
+              ))}
             </span>
           )}
           {item.year && (

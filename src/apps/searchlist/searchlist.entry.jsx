@@ -27,10 +27,7 @@ function SearchlistEntry({
 
   useEffect(() => {
     const client = new FollowSearches({ baseUrl: followSearchesUrl });
-    client
-      .getSearches()
-      .then(setSearchlist)
-      .catch(setSearchlistFailedStatus);
+    client.getSearches().then(setSearchlist).catch(setSearchlistFailedStatus);
   }, [followSearchesUrl]);
 
   function removeSearch(id) {

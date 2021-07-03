@@ -8,4 +8,5 @@ coverage
 index.html
 .tokens.json
 .vscode
+.idea
 yarn-error.log

@@ -3,9 +3,8 @@
   "extends": [
     "airbnb",
     "airbnb/hooks",
-    "plugin:prettier/recommended",
-    "prettier/react",
-    "plugin:cypress/recommended"
+    "plugin:cypress/recommended",
+    "prettier"
   ],
   "settings": {
     "react": {
