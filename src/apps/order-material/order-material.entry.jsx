@@ -1,10 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import urlPropType from "url-prop-type";
 
 import OrderMaterial from "./order-material";
-import OpenPlatform from "../../core/OpenPlatform";
 import User from "../../core/user";
+
+import {
+  checkAvailibility,
+  orderMaterial,
+  orderMaterialPending,
+  orderMaterialAborted,
+  resetStatusDelayed
+} from "./order-material.slice";
 
 /**
  * Transform a set of ids to an array of ids.
@@ -19,8 +27,21 @@ function idsArray(ids) {
   return typeof ids === "string" ? ids.split(",") : ids;
 }
 
+/**
+ * Do the reverse of idsArray
+ *
+ * This returns a string, separating ids with commas.
+ *
+ * @param {string|string[]} One or more ids.
+ * @returns {string} Comma separated list of ids.
+ */
+function idsString(ids) {
+  return typeof ids !== "string" ? ids.join() : ids;
+}
+
 function OrderMaterialEntry({
   text,
+  helpText,
   successText,
   successMessage,
   errorText,
@@ -30,62 +51,62 @@ function OrderMaterialEntry({
   invalidPickupBranchText,
   ids,
   loginUrl,
+  illCheckUrl,
   pickupBranch,
   expires
 }) {
-  const [status, setStatus] = useState("initial");
+  // const [status, setStatus] = useState("initial");
+  const stateId = idsString(ids);
+  const status =
+    useSelector(state => state.orderMaterial.status[stateId]) || "initial";
+  const dispatch = useDispatch();
+  const loggedIn = User.isAuthenticated();
 
-  function orderMaterial() {
-    setStatus("processing");
-    const client = new OpenPlatform();
-    client
-      .orderMaterial({ pids: idsArray(ids), pickupBranch, expires })
-      .then(() => {
-        setStatus("finished");
-      })
-      .catch(() => {
-        setStatus("failed");
-      });
+  function onClick() {
+    dispatch(orderMaterialPending({ id: stateId }));
+    if (!loggedIn) {
+      User.authenticate(loginUrl);
+    }
   }
 
   useEffect(() => {
-    const client = new OpenPlatform();
-    // Check that the material is available for ILL.
-    setStatus("checking");
-    client
-      .canBeOrdered(idsArray(ids))
-      .then(available => {
-        if (!available) {
-          setStatus("unavailable");
-        } else if (User.isAuthenticated()) {
-          // Check that the pickup branch accepts inter-library loans.
-          client
-            .getBranch(pickupBranch)
-            .then(branch => {
-              if (branch.willReceiveIll !== "1") {
-                setStatus("invalid branch");
-              } else {
-                setStatus("ready");
-              }
-            })
-            .catch(() => {
-              setStatus("failed");
-            });
-        } else {
-          // It's available and we're not logged in, show as available
-          // for order. Ready is the state we use for buttons which
-          // require login when accessed by anonymous users.
-          setStatus("ready");
-        }
-      })
-      .catch(() => {
-        setStatus("failed");
-      });
-  }, [ids, pickupBranch]);
+    if (status === "initial") {
+      // Check that the material is available for ILL.
+      dispatch(
+        checkAvailibility({ id: stateId, pids: idsArray(ids), illCheckUrl })
+      );
+    }
+    if (status === "pending") {
+      if (loggedIn) {
+        dispatch(
+          orderMaterial({
+            id: stateId,
+            pids: idsArray(ids),
+            pickupBranch,
+            expires
+          })
+        );
+      } else if (User.authenticationFailed()) {
+        // If authentication failed, abort.
+        dispatch(orderMaterialAborted({ id: stateId }));
+        dispatch(resetStatusDelayed({ id: stateId }));
+      }
+    }
+  }, [
+    ids,
+    pickupBranch,
+    illCheckUrl,
+    expires,
+    loggedIn,
+    stateId,
+    status,
+    dispatch
+  ]);
 
   return (
     <OrderMaterial
       text={text}
+      helpText={helpText}
       errorText={errorText}
       successText={successText}
       successMessage={successMessage}
@@ -94,7 +115,7 @@ function OrderMaterialEntry({
       unavailableText={unavailableText}
       invalidPickupBranchText={invalidPickupBranchText}
       status={status}
-      onClick={orderMaterial}
+      onClick={onClick}
       loginUrl={loginUrl}
       materialIds={idsArray(ids)}
     />
@@ -103,6 +124,7 @@ function OrderMaterialEntry({
 
 OrderMaterialEntry.propTypes = {
   text: PropTypes.string,
+  helpText: PropTypes.string,
   errorText: PropTypes.string,
   checkingText: PropTypes.string,
   progressText: PropTypes.string,
@@ -115,12 +137,14 @@ OrderMaterialEntry.propTypes = {
     PropTypes.arrayOf(PropTypes.string)
   ]).isRequired,
   loginUrl: urlPropType.isRequired,
+  illCheckUrl: urlPropType.isRequired,
   pickupBranch: PropTypes.string.isRequired,
   expires: PropTypes.string.isRequired
 };
 
 OrderMaterialEntry.defaultProps = {
   text: "Bestil materiale",
+  helpText: null,
   checkingText: "Undersøger mulighed for fjernlån",
   progressText: "Bestiller materiale",
   unavailableText: "Kan ikke fjernlånes",

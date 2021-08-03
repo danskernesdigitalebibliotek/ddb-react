@@ -1,15 +1,6 @@
 describe("Order material", () => {
   it("Should display message if library does not support ILL", () => {
     cy.server();
-    cy.route({
-      method: "GET",
-      url: "https://openplatform.dbc.dk/v3/availability*",
-      status: 200,
-      response: {
-        statusCode: 200,
-        data: [{ willLend: true, orderPossible: true }]
-      }
-    });
 
     cy.route({
       method: "GET",
@@ -21,6 +12,13 @@ describe("Order material", () => {
       }
     });
 
+    cy.route({
+      method: "GET",
+      url: "https://lollandbib.dk/ding_ill/openholdingstatus/*",
+      status: 200,
+      response: { canBeOrdered: false }
+    });
+
     cy.visit("/iframe.html?id=apps-order-material--entry");
 
     cy.contains("Bestil materiale").should("not.exist");
@@ -30,34 +28,28 @@ describe("Order material", () => {
   [
     {
       title: "Should display message if a single material can't be ordered",
-      availability: [{ willLend: true, orderPossible: false }],
-      orderable: false
+      orderable: false,
+      openholdingstatus: { canBeOrdered: false}
     },
     {
       title: "Should display message if a single material can't be lent",
-      availability: [{ willLend: false, orderPossible: true }],
-      orderable: false
+      orderable: false,
+      openholdingstatus: { canBeOrdered: false}
     },
     {
       title: "Should display message if a set of materials can't be ordered",
-      availability: [
-        { willLend: true, orderPossible: false },
-        { willLend: true, orderPossible: false }
-      ],
-      orderable: false
+      orderable: false,
+      openholdingstatus: { canBeOrdered: false}
     },
     {
       title: "Should display button if a single material can be ordered",
-      availability: [{ willLend: true, orderPossible: true }],
-      orderable: true
+      orderable: true,
+      openholdingstatus: { canBeOrdered: true}
     },
     {
       title: "Should display button if a set of materials can be ordered",
-      availability: [
-        { willLend: true, orderPossible: true },
-        { willLend: true, orderPossible: false }
-      ],
-      orderable: true
+      orderable: true,
+      openholdingstatus: { canBeOrdered: true}
     }
   ].forEach(scenario => {
     it(scenario.title, () => {
@@ -74,12 +66,9 @@ describe("Order material", () => {
 
       cy.route({
         method: "GET",
-        url: "https://openplatform.dbc.dk/v3/availability*",
+        url: "https://lollandbib.dk/ding_ill/openholdingstatus*",
         status: 200,
-        response: {
-          statusCode: 200,
-          data: scenario.availability
-        }
+        response: scenario.openholdingstatus
       });
 
       cy.visit("/iframe.html?id=apps-order-material--entry");
@@ -122,19 +111,6 @@ describe("Order material", () => {
             address: "address",
             mail: "mail"
           }
-        ]
-      }
-    });
-
-    cy.route({
-      method: "GET",
-      url: "https://openplatform.dbc.dk/v3/availability*",
-      status: 200,
-      response: {
-        statusCode: 200,
-        data: [
-          { willLend: true, orderPossible: true },
-          { willLend: true, orderPossible: false }
         ]
       }
     });
