@@ -60,7 +60,7 @@ export const orderMaterialSlice = createSlice({
         ? "ready"
         : "unavailable";
     },
-    [checkAvailibility.pending]: (state, action) => {
+    [checkAvailibility.rejected]: (state, action) => {
       state.status[action.meta.arg.id] = "failed";
     },
     [orderMaterial.pending]: (state, action) => {
