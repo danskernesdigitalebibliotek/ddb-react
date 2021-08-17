@@ -1,13 +1,33 @@
 import React, { useEffect, useState, useRef } from "react";
 import PropTypes from "prop-types";
 import urlPropType from "url-prop-type";
-import replace from "lodash/replace";
 
 import RelatedMaterials from "./related-materials";
 import OpenPlatform from "../../core/OpenPlatform";
 import CoverService from "../../core/CoverService";
+import LibryRecommendationService from "../../core/LibryRecommendationService";
 import Material from "../../core/Material";
-import replacePlaceholders from "../../core/replacePlaceholders";
+
+/**
+ * Build a search clause.
+ *
+ * Example: phrase.subject=("magic" or "wizards")
+ *
+ * @param {string} The name of the search index to query.
+ * @param {string[]} The values to query for.
+ * @param {object} options
+ * @param {"and|or"?} options.operator The operator to use between multiple values.
+ * @param {bool?} options.negate Whether to negate the values or not.
+ * @returns string
+ */
+function searchClause(index, values, options = {}) {
+  const allOptions = { operator: "or", negate: false, ...options };
+  const valuesString = values
+    .map(subject => `"${subject}"`)
+    .join(` ${allOptions.operator} `);
+  const clause = `${index}=(${valuesString})`;
+  return (allOptions.negate ? "not " : "") + clause;
+}
 
 /**
  * Retrieve the materials and corresponding covers, merge the two and return the results.
@@ -24,23 +44,43 @@ import replacePlaceholders from "../../core/replacePlaceholders";
  * @returns list of the materials with covers.
  */
 async function getRelatedMaterials({
-  query,
+  pid,
+  agencyId,
   offset,
   limit,
   fields,
-  sort,
-  coverClient
+  coverClient,
+  relatedClient
 } = {}) {
   if (!fields.includes("pid")) {
     throw Error('"pid" must be included as a field.');
   }
-  const openPlatformClient = new OpenPlatform();
-  const materials = await openPlatformClient.search(query, {
+
+  // The recommendation service works with Faust numbers, so extract
+  // it from the pid.
+  const parts = pid.split(":");
+  if (!parts[1]) {
+    return [];
+  }
+
+  const id = parts[1];
+
+  // Get the current slice of recommendations. This causes repeated
+  // calls to the recommendation service, but it's the simplest way to
+  // implement it in the current code. Leave optimization for later.
+  const relatedFausts = (await relatedClient.getRecommendations({ id })).slice(
     offset,
-    limit,
-    fields,
-    sort
-  });
+    offset + limit
+  );
+
+  const query = `${searchClause("id", relatedFausts)} and ${searchClause(
+    "holdingsitem.agencyid",
+    [agencyId]
+  )}`;
+
+  const openPlatformClient = new OpenPlatform();
+  const materials = await openPlatformClient.search(query, { fields });
+
   const materialIds = materials.map(material => material.pid[0]);
   // This fits our desired cover size the best.
   const coverSize = "large";
@@ -78,12 +118,13 @@ async function getRelatedMaterials({
  * @returns list of the materials with covers.
  */
 function useGetRelatedMaterials({
-  query,
+  pid,
   amount = 10,
   maxTries = 10,
   fields,
-  sort,
-  coverClient
+  coverClient,
+  relatedClient,
+  agencyId
 } = {}) {
   const initialState = useRef({
     status: "ready",
@@ -100,7 +141,7 @@ function useGetRelatedMaterials({
   // Whenever the query changes we want to re-initialize the state and re-fetch new materials.
   useEffect(() => {
     setRelatedMaterials(initialState.current);
-  }, [initialState, query]);
+  }, [initialState, pid, agencyId]);
 
   // This is the amount additional to the desired we want to try and fetch.
   // This is to ensure a better first hit in most instances.
@@ -120,12 +161,13 @@ function useGetRelatedMaterials({
       );
       const limit = Math.min(calculatedLimit, maxLimit);
       getRelatedMaterials({
-        query,
+        pid,
+        agencyId,
         limit,
         offset: relatedMaterials.offset,
         fields,
-        sort,
-        coverClient
+        coverClient,
+        relatedClient
       })
         .then(response => {
           // We use this to track where we are in the assignment of materials to the respective object.
@@ -169,127 +211,39 @@ function useGetRelatedMaterials({
         });
     }
   }, [
+    pid,
+    agencyId,
     amount,
     coverClient,
+    relatedClient,
     fields,
     initialState,
     maxTries,
-    query,
-    relatedMaterials,
-    sort
+    relatedMaterials
   ]);
   return relatedMaterials;
 }
 
-/**
- * Convert a string with values separated by , to an array of strings.
- *
- * This is typically used for props coming from a data attribute.
- *
- * Use \, to escape commas in values.
- *
- * Example: "wizards,rowling\\, j.k." => ["wizards", "rowling, j.k."]
- *
- * @param {string} string
- * @returns string[]
- */
-function stringToArray(string) {
-  // Replace escaped commas with newlines (which doesn't make sense in a comma
-  // separated string) so we wont split on them.
-  const unescapedParts = replace(string, "\\,", "\n").split(/,/);
-  const escapedParts = unescapedParts.map(part => replace(part, "\n", ","));
-  // Remove leading and trailing spaces and empty values.
-  const trimmedParts = escapedParts.map(part => part.trim());
-  return trimmedParts.filter(part => part);
-}
-
-/**
- * Build a search clause.
- *
- * Example: phrase.subject=("magic" or "wizards")
- *
- * @param {string} The name of the search index to query.
- * @param {string[]} The values to query for.
- * @param {object} options
- * @param {"and|or"?} options.operator The operator to use between multiple values.
- * @param {bool?} options.negate Whether to negate the values or not.
- * @returns string
- */
-function searchClause(index, values, options = {}) {
-  const allOptions = { operator: "or", negate: false, ...options };
-  const valuesString = values
-    .map(subject => `"${subject}"`)
-    .join(` ${allOptions.operator} `);
-  const clause = `${index}=(${valuesString})`;
-  return (allOptions.negate ? "not " : "") + clause;
-}
-
 function RelatedMaterialsEntry({
-  subjects: subjectString,
-  categories: categoriesString,
-  sources: sourcesString,
-  excludeTitle: rawExcludeTitle,
-  sort,
-  searchUrl: rawSearchUrl,
+  pid,
+  clientId,
   materialUrl,
   coverServiceUrl,
+  relatedMaterialsServiceUrl,
   titleText,
-  searchText,
   amount,
   maxTries,
   agencyId
 }) {
+  const relatedClient = new LibryRecommendationService({
+    baseUrl: relatedMaterialsServiceUrl,
+    clientId
+  });
   const coverClient = new CoverService({ baseUrl: coverServiceUrl });
 
-  // We may be passed empty strings which will lead to an invalid query.
-  // Compile query clauses using only arguments with actual values.
-  const includes = [];
-  if (subjectString) {
-    const subjects = stringToArray(subjectString);
-    includes.push(searchClause("phrase.subject", subjects));
-  }
-  if (categoriesString) {
-    const categories = stringToArray(categoriesString);
-    includes.push(searchClause("term.category", categories));
-  }
-  if (sourcesString) {
-    const sources = stringToArray(sourcesString);
-    includes.push(searchClause("term.acSource", sources));
-  }
-  // If we didn't get any criteria, just grab the world.
-  if (includes.length < 1) {
-    includes.push("*");
-  }
-  const excludes = [];
-  if (rawExcludeTitle) {
-    excludes.push(
-      searchClause("phrase.title", [rawExcludeTitle], { negate: true })
-    );
-  }
-
-  // Use join to get spacing between clauses right. Includes must be separated
-  // by "and" while excludes must not. Excludes should already have "not" prepended.
-  let query = [includes.join(" and "), excludes.join(" ")].join(" ");
-
-  // One would think that we could just add the holdingsitem clause to
-  // includes, but for some reason OpenPlatform does not like it there
-  // and gives us an "Error: 18: Unsupported combination of indexes (,
-  // holdingsitem.agencyId)" error. So we append it here.
-  if (agencyId) {
-    const agencyLimit = searchClause("holdingsitem.agencyid", [agencyId]);
-    query = `${query} and ${agencyLimit}`;
-  }
-
-  const searchUrl = `${replacePlaceholders({
-    text: rawSearchUrl,
-    placeholders: {
-      query: encodeURI(query),
-      sort: encodeURI(sort)
-    }
-  })}`;
-
   const relatedMaterials = useGetRelatedMaterials({
-    query,
+    pid,
+    agencyId,
     fields: [
       "dcTitleFull",
       "pid",
@@ -298,50 +252,29 @@ function RelatedMaterialsEntry({
       "typeBibDKType",
       "date"
     ],
-    sort,
     amount,
     maxTries,
-    coverClient
+    coverClient,
+    relatedClient
   });
   return (
     <RelatedMaterials
       status={relatedMaterials.status}
       items={relatedMaterials.materials}
-      searchUrl={searchUrl}
       materialUrl={materialUrl}
-      searchText={searchText}
       titleText={titleText}
     />
   );
 }
 
 RelatedMaterialsEntry.propTypes = {
+  pid: PropTypes.string.isRequired,
+  clientId: PropTypes.string.isRequired,
   amount: PropTypes.number,
   maxTries: PropTypes.number,
-  subjects: PropTypes.string.isRequired,
-  categories: PropTypes.string.isRequired,
-  sources: PropTypes.string.isRequired,
-  excludeTitle: PropTypes.string.isRequired,
-  sort: PropTypes.oneOf([
-    "date_descending",
-    "date_ascending",
-    "rank_title",
-    "rank_general",
-    "rank_main_title",
-    "rank_subject",
-    "rank_verification",
-    "rank_creator",
-    "rank_none",
-    "article_date_descending",
-    "article_date_ascending",
-    "acquisitionDate_descending",
-    "acquisitionDate_ascending",
-    "random"
-  ]),
-  searchUrl: urlPropType.isRequired,
   materialUrl: urlPropType.isRequired,
   coverServiceUrl: urlPropType.isRequired,
-  searchText: PropTypes.string,
+  relatedMaterialsServiceUrl: urlPropType.isRequired,
   titleText: PropTypes.string,
   agencyId: PropTypes.string
 };
@@ -349,9 +282,7 @@ RelatedMaterialsEntry.propTypes = {
 RelatedMaterialsEntry.defaultProps = {
   amount: 10,
   maxTries: 5,
-  titleText: "Forslag med samme emner",
-  searchText: "Søg på samme emner",
-  sort: "date_descending",
+  titleText: "Relaterede materialer",
   agencyId: ""
 };
 

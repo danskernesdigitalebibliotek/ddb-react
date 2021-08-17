@@ -26,16 +26,12 @@ const Template = args => <RelatedMaterials {...args} />;
 
 export const Entry = Template.bind({});
 Entry.args = {
-  subjects: "magi,troldmænd",
-  categories: "børnematerialer",
-  sources:
-    "bibliotekskatalog,ereolen,ereolen global,comics plus,ebook central,rbdigital magazines",
-  excludeTitle: "harry potter og fønixordenen",
-  searchUrl: "https://lollandbib.dk/search/ting/:query?sort=:sort",
+  pid: "870970-basis:54871910",
+  clientId: "",
   materialUrl: "https://lollandbib.dk/ting/object/:pid",
   coverServiceUrl: "https://cover.dandigbib.org/api/v2",
+  relatedMaterialsServiceUrl: "https://recommendation-staging.libry.dk/api/v1",
   titleText: "Forslag",
-  searchText: "Søg",
   amount: 10,
   maxTries: 5,
   agencyId: "736000"

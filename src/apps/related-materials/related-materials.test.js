@@ -1,3 +1,68 @@
+function getRecommendations(amount = 12) {
+  return [
+    {
+      id: "47248655",
+      score: 0.996,
+      reason: ""
+    },
+    {
+      id: "47450527",
+      score: 0.995,
+      reason: ""
+    },
+    {
+      id: "47664705",
+      score: 0.994,
+      reason: ""
+    },
+    {
+      id: "47593638",
+      score: 0.993,
+      reason: ""
+    },
+    {
+      id: "47679907",
+      score: 0.992,
+      reason: ""
+    },
+    {
+      id: "47811406",
+      score: 0.991,
+      reason: ""
+    },
+    {
+      id: "46365674",
+      score: 0.99,
+      reason: ""
+    },
+    {
+      id: "25929802",
+      score: 0.989,
+      reason: ""
+    },
+    {
+      id: "47661927",
+      score: 0.988,
+      reason: ""
+    },
+    {
+      id: "47806119",
+      score: 0.987,
+      reason: ""
+    },
+    {
+      id: "47714168",
+      score: 0.986,
+      reason: ""
+    },
+    {
+      id: "47820979",
+      score: 0.985,
+      reason: ""
+    }
+  ].slice(0, amount);
+}
+
 function getWork(amount = 12) {
   return [
     {
@@ -216,14 +281,15 @@ describe("Related Materials", () => {
     cy.visit("/iframe.html?id=apps-related-materials--entry");
     cy.contains("Forslag");
   });
-  it("Should show a link that leads to the full suggested search", () => {
-    cy.visit("/iframe.html?id=apps-related-materials--entry");
-    cy.contains("Søg")
-      .should("have.attr", "href")
-      .and("include", "magi");
-  });
   it("Should show loading elements for the requested amount of materials", () => {
     cy.server();
+    cy.route({
+      method: "GET",
+      url:
+        "https://recommendation-staging.libry.dk/api/v1//recommendation/token/tag/ddb_library_dk/id/54871910",
+      status: 200,
+      response: getRecommendations(12)
+    });
     cy.route({
       method: "GET",
       url: "https://openplatform.dbc.dk/v3/search*",
@@ -241,6 +307,13 @@ describe("Related Materials", () => {
   });
   it("Should show the requested amount of images and links", () => {
     cy.server();
+    cy.route({
+      method: "GET",
+      url:
+        "https://recommendation-staging.libry.dk/api/v1//recommendation/token/tag/ddb_library_dk/id/54871910",
+      status: 200,
+      response: getRecommendations(12)
+    });
     cy.route({
       method: "GET",
       url: "https://openplatform.dbc.dk/v3/search*",
@@ -265,6 +338,13 @@ describe("Related Materials", () => {
 
   it("Should show a subset of requested images and links", () => {
     cy.server();
+    cy.route({
+      method: "GET",
+      url:
+        "https://recommendation-staging.libry.dk/api/v1//recommendation/token/tag/ddb_library_dk/id/54871910",
+      status: 200,
+      response: getRecommendations(12)
+    });
     cy.route({
       method: "GET",
       url: "https://openplatform.dbc.dk/v3/search*",
@@ -292,6 +372,13 @@ describe("Related Materials", () => {
 
   it("Should not show covers without image urls", () => {
     cy.server();
+    cy.route({
+      method: "GET",
+      url:
+        "https://recommendation-staging.libry.dk/api/v1//recommendation/token/tag/ddb_library_dk/id/54871910",
+      status: 200,
+      response: getRecommendations(12)
+    });
     cy.route({
       method: "GET",
       url: "https://openplatform.dbc.dk/v3/search*",
@@ -328,6 +415,13 @@ describe("Related Materials", () => {
     cy.server();
     cy.route({
       method: "GET",
+      url:
+        "https://recommendation-staging.libry.dk/api/v1//recommendation/token/tag/ddb_library_dk/id/54871910",
+      status: 200,
+      response: getRecommendations(12)
+    });
+    cy.route({
+      method: "GET",
       url: "https://openplatform.dbc.dk/v3/search*",
 
       status: 200,
@@ -351,7 +445,6 @@ describe("Related Materials", () => {
     });
     cy.visit("/iframe.html?id=apps-related-materials--entry");
     cy.get(".ddb-related-material__skeleton").should("have.length", 10);
-    cy.contains("Søg");
     cy.contains("Forslag");
     cy.get("a.ddb-related-material").should("have.length", 0);
     cy.contains("Søg").should("not.exist");
