@@ -31,7 +31,7 @@ module.exports = (_env, argv) => {
     plugins.push(
       new VersionFile({
         template: path.join(__dirname, ".version.json.ejs"),
-        outputFile: path.join(__dirname, "dist/version.json"),
+        outputFile: path.join(__dirname, production ? "dist/production/version.json" : "dist/debug/version.json"),
         name: process.env.VERSION_FILE_NAME,
         version: process.env.VERSION_FILE_VERSION,
         // We intentionally do not use any information from package.json but
@@ -49,7 +49,7 @@ module.exports = (_env, argv) => {
     },
     output: {
       filename: "[name].js",
-      path: path.resolve(__dirname, "dist")
+      path: path.resolve(__dirname, production ? "dist/production" : "dist/debug")
     },
     mode: argv.mode,
     devtool: production ? "source-map" : "inline-source-map",
