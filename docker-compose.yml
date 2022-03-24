@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   node:
-    image: node:12.13.0-alpine
+    image: node:12.22.0-alpine
     user: node
     init: true
     working_dir: /home/node/app
