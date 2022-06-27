@@ -13,25 +13,6 @@
   margin-left: space(5);
 }
 
-.ddb-related-materials__search {
-  text-decoration: none;
-  color: inherit;
-  margin-left: space(5);
-  &:hover,
-  &:focus {
-    text-decoration: underline;
-  }
-  @include sm {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin-left: 0;
-    margin-top: space(5);
-    margin-right: space(5);
-    text-align: right;
-  }
-}
-
 .ddb-related-materials__list {
   list-style: none;
   display: flex;

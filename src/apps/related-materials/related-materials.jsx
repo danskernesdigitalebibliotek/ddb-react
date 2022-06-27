@@ -72,14 +72,7 @@ RelatedMaterial.propTypes = {
   materialUrl: urlPropType.isRequired
 };
 
-function RelatedMaterials({
-  items,
-  status,
-  searchUrl,
-  materialUrl,
-  searchText,
-  titleText
-}) {
+function RelatedMaterials({ items, status, materialUrl, titleText }) {
   if (status === "failed" || status === "empty") {
     // Return discretly.
     // When a failure occurs there is no use in showing links or anything since
@@ -113,25 +106,26 @@ function RelatedMaterials({
           )
         )}
       </ul>
-      <a className="ddb-related-materials__search" href={searchUrl}>
-        {searchText}
-      </a>
     </div>
   );
 }
 
 RelatedMaterials.propTypes = {
   items: PropTypes.arrayOf(PropTypes.any),
-  searchUrl: urlPropType.isRequired,
   materialUrl: urlPropType.isRequired,
-  searchText: PropTypes.string.isRequired,
   titleText: PropTypes.string.isRequired,
-  status: PropTypes.oneOf(["ready", "processing", "finished", "failed"])
-    .isRequired
+  status: PropTypes.oneOf([
+    "initial",
+    "ready",
+    "processing",
+    "finished",
+    "failed"
+  ])
 };
 
 RelatedMaterials.defaultProps = {
-  items: []
+  items: [],
+  status: "initial"
 };
 
 export default RelatedMaterials;
